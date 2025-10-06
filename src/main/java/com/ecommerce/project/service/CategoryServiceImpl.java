@@ -16,7 +16,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-
     @Override
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
@@ -28,7 +27,6 @@ public class CategoryServiceImpl implements CategoryService {
         if (savedCategory != null) {
             throw new APIException("Category with name " + category.getCategoryName() + " already exists");
         }
-
         categoryRepository.save(category);
     }
 
