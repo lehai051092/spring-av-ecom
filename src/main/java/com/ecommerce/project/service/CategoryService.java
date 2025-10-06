@@ -1,12 +1,11 @@
 package com.ecommerce.project.service;
 
-import java.util.List;
-
 import com.ecommerce.project.model.Category;
+import com.ecommerce.project.payload.CategoryResponse;
 
 public interface CategoryService {
 
-    List<Category> getAllCategories();
+    CategoryResponse getAllCategories();
 
     void createCategory(Category category);
 
