@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ecommerce.project.model.Category;
 import com.ecommerce.project.payload.CategoryDTO;
 import com.ecommerce.project.payload.CategoryResponse;
 import com.ecommerce.project.service.CategoryService;
@@ -45,8 +44,8 @@ public class CategoryController {
     }
 
     @PutMapping("/admin/categories/{categoryId}")
-    public ResponseEntity<String> updateCategory(@PathVariable Long categoryId, @Valid @RequestBody Category category) {
-        categoryService.updateCategory(categoryId, category);
-        return new ResponseEntity<>("Category with ID " + categoryId + " updated successfully", HttpStatus.OK);
+    public ResponseEntity<CategoryDTO> editCategory(@PathVariable Long categoryId, @Valid @RequestBody CategoryDTO categoryDTO) {
+        CategoryDTO updatedCategoryDTO = categoryService.updateCategory(categoryId, categoryDTO);
+        return new ResponseEntity<>(updatedCategoryDTO, HttpStatus.OK);
     }
 }
