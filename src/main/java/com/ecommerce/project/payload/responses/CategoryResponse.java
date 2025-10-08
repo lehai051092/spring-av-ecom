@@ -1,6 +1,8 @@
-package com.ecommerce.project.payload;
+package com.ecommerce.project.payload.responses;
 
 import java.util.List;
+
+import com.ecommerce.project.payload.dtos.CategoryDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
