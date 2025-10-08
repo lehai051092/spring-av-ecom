@@ -14,6 +14,7 @@ import com.ecommerce.project.exceptions.APIException;
 import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.payload.dtos.CategoryDTO;
+import com.ecommerce.project.payload.dtos.PaginationDTO;
 import com.ecommerce.project.payload.responses.CategoryResponse;
 import com.ecommerce.project.repositories.CategoryRepository;
 
@@ -40,13 +41,21 @@ public class CategoryServiceImpl implements CategoryService {
                 .map(category -> modelMapper.map(category, CategoryDTO.class))
                 .toList();
 
+        return getCategoryResponse(categoryDTOS, categoryPage);
+    }
+
+    private static CategoryResponse getCategoryResponse(List<CategoryDTO> categoryDTOS, Page<Category> categoryPage) {
         CategoryResponse categoryResponse = new CategoryResponse();
         categoryResponse.setContent(categoryDTOS);
-        categoryResponse.setPageNumber(categoryPage.getNumber());
-        categoryResponse.setPageSize(categoryPage.getSize());
-        categoryResponse.setTotalElements(categoryPage.getTotalElements());
-        categoryResponse.setTotalPages(categoryPage.getTotalPages());
-        categoryResponse.setLastPage(categoryPage.isLast());
+
+        PaginationDTO paginationDTO = new PaginationDTO();
+        paginationDTO.setPageNumber(categoryPage.getNumber());
+        paginationDTO.setPageSize(categoryPage.getSize());
+        paginationDTO.setTotalElements(categoryPage.getTotalElements());
+        paginationDTO.setTotalPages(categoryPage.getTotalPages());
+        paginationDTO.setLastPage(categoryPage.isLast());
+
+        categoryResponse.setPagination(paginationDTO);
         return categoryResponse;
     }
 

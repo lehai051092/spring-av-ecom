@@ -3,6 +3,7 @@ package com.ecommerce.project.payload.responses;
 import java.util.List;
 
 import com.ecommerce.project.payload.dtos.CategoryDTO;
+import com.ecommerce.project.payload.dtos.PaginationDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,9 +15,5 @@ import lombok.NoArgsConstructor;
 public class CategoryResponse {
 
     private List<CategoryDTO> content;
-    private Integer pageNumber;
-    private Integer pageSize;
-    private Long totalElements;
-    private Integer totalPages;
-    private boolean lastPage;
+    private PaginationDTO pagination;
 }
