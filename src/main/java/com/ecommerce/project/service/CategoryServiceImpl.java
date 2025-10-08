@@ -66,7 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDTO deleteCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("Category", "id", categoryId)
+                        () -> new ResourceNotFoundException("Category", "categoryId", categoryId)
                 );
 
         categoryRepository.deleteById(category.getCategoryId());
@@ -77,7 +77,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDTO updateCategory(Long categoryId, CategoryDTO categoryDTO) {
         Category existedCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("Category", "id", categoryId)
+                        () -> new ResourceNotFoundException("Category", "categoryId", categoryId)
                 );
         existedCategory.setCategoryName(categoryDTO.getCategoryName());
 
