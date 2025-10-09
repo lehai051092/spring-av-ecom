@@ -1,7 +1,5 @@
 package com.ecommerce.project.payload.dtos;
 
-import com.ecommerce.project.model.Category;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +17,4 @@ public class ProductDTO {
     private double price;
     private double discount;
     private double specialPrice;
-
-    private Category category;
 }

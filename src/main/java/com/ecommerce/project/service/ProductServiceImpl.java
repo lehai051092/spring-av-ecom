@@ -1,5 +1,7 @@
 package com.ecommerce.project.service;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.model.Product;
 import com.ecommerce.project.payload.dtos.ProductDTO;
+import com.ecommerce.project.payload.responses.ProductResponse;
 import com.ecommerce.project.repositories.CategoryRepository;
 import com.ecommerce.project.repositories.ProductRepository;
 
@@ -27,10 +30,8 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO addProduct(Long categoryId, ProductDTO productDTO) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("Category", "categoryId", categoryId)
-                );
+                        () -> new ResourceNotFoundException("Category", "categoryId", categoryId));
         Product product = modelMapper.map(productDTO, Product.class);
-
         product.setImage("default.png");
         product.setCategory(category);
 
@@ -38,5 +39,17 @@ public class ProductServiceImpl implements ProductService {
         product.setSpecialPrice(specialPrice);
 
         return modelMapper.map(productRepository.save(product), ProductDTO.class);
+    }
+
+    @Override
+    public ProductResponse getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        List<ProductDTO> productDTOs = products.stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .toList();
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setContent(productDTOs);
+
+        return productResponse;
     }
 }
