@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ecommerce.project.exceptions.APIException;
 import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.model.Product;
@@ -40,6 +41,20 @@ public class ProductServiceImpl implements ProductService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+
+        boolean ifProductNotPresent = true;
+        List<Product> products = category.getProducts();
+        for (Product p : products) {
+            if (p.getProductName().equals(productDTO.getProductName())) {
+                ifProductNotPresent = false;
+                break;
+            }
+        }
+
+        if (!ifProductNotPresent) {
+            throw new APIException("Product with name " + productDTO.getProductName() + " already exists");
+        }
+
         Product product = modelMapper.map(productDTO, Product.class);
         product.setImage("default.png");
         product.setCategory(category);
