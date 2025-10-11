@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ecommerce.project.payload.dtos.ProductDTO;
 import com.ecommerce.project.payload.responses.ProductResponse;
 import com.ecommerce.project.service.ProductService;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/api")
@@ -50,4 +52,10 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.FOUND).body(productResponse);
     }
 
+    @PutMapping("/admin/products/{productId}")
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long productId, @RequestBody ProductDTO productDTO) {
+        ProductDTO updateProductDTO = productService.updateProduct(productId, productDTO);
+        
+        return ResponseEntity.status(HttpStatus.OK).body(updateProductDTO);
+    }
 }
