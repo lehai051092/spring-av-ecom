@@ -2,6 +2,8 @@ package com.ecommerce.project.controller;
 
 import java.io.IOException;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ecommerce.project.config.AppConstants;
+import com.ecommerce.project.payload.dtos.PageableDTO;
 import com.ecommerce.project.payload.dtos.ProductDTO;
 import com.ecommerce.project.payload.responses.ProductResponse;
 import com.ecommerce.project.service.ProductService;
-
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -38,22 +40,42 @@ public class ProductController {
     }
 
     @GetMapping("/public/products")
-    public ResponseEntity<ProductResponse> getAllProducts() {
-        ProductResponse productResponse = productService.getAllProducts();
+    public ResponseEntity<ProductResponse> getAllProducts(
+            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_BY_PRODUCT, required = false) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_ORDER, required = false) String sortOrder) {
+
+        PageableDTO pageableDTO = new PageableDTO(pageNumber, pageSize, sortBy, sortOrder);
+        ProductResponse productResponse = productService.getAllProducts(pageableDTO);
 
         return ResponseEntity.status(HttpStatus.OK).body(productResponse);
     }
 
     @GetMapping("/public/categories/{categoryId}/products")
-    public ResponseEntity<ProductResponse> getAllProductsByCategory(@PathVariable Long categoryId) {
-        ProductResponse productResponse = productService.getAllProductsByCategory(categoryId);
+    public ResponseEntity<ProductResponse> getAllProductsByCategory(
+            @PathVariable Long categoryId,
+            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_BY_PRODUCT, required = false) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_ORDER, required = false) String sortOrder) {
+
+        PageableDTO pageableDTO = new PageableDTO(pageNumber, pageSize, sortBy, sortOrder);
+        ProductResponse productResponse = productService.getAllProductsByCategory(categoryId, pageableDTO);
 
         return ResponseEntity.status(HttpStatus.OK).body(productResponse);
     }
 
     @GetMapping("/public/products/keyword/{keyword}")
-    public ResponseEntity<ProductResponse> searchProductsByKeyword(@PathVariable String keyword) {
-        ProductResponse productResponse = productService.searchProductsByKeyword(keyword);
+    public ResponseEntity<ProductResponse> searchProductsByKeyword(
+            @PathVariable String keyword,
+            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_BY_PRODUCT, required = false) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_ORDER, required = false) String sortOrder) {
+
+        PageableDTO pageableDTO = new PageableDTO(pageNumber, pageSize, sortBy, sortOrder);
+        ProductResponse productResponse = productService.searchProductsByKeyword(keyword, pageableDTO);
 
         return ResponseEntity.status(HttpStatus.FOUND).body(productResponse);
     }

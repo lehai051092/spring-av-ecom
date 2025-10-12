@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.project.config.AppConstants;
 import com.ecommerce.project.payload.dtos.CategoryDTO;
+import com.ecommerce.project.payload.dtos.PageableDTO;
 import com.ecommerce.project.payload.responses.CategoryResponse;
 import com.ecommerce.project.service.CategoryService;
 
@@ -31,10 +32,11 @@ public class CategoryController {
     public ResponseEntity<CategoryResponse> getAllCategories(
             @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
             @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
-            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_BY, required = false) String sortBy,
-            @RequestParam(name = "sortOrder",  defaultValue = AppConstants.SORT_ORDER, required = false) String sortOrder
-    ) {
-        CategoryResponse categories = categoryService.getAllCategories(pageNumber, pageSize, sortBy, sortOrder);
+            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_BY_CATEGORY, required = false) String sortBy,
+            @RequestParam(name = "sortOrder",  defaultValue = AppConstants.SORT_ORDER, required = false) String sortOrder) {
+
+        PageableDTO pageableDTO = new PageableDTO(pageNumber, pageSize, sortBy, sortOrder);
+        CategoryResponse categories = categoryService.getAllCategories(pageableDTO);
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 

@@ -6,6 +6,8 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,6 +15,7 @@ import com.ecommerce.project.exceptions.APIException;
 import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.model.Product;
+import com.ecommerce.project.payload.dtos.PageableDTO;
 import com.ecommerce.project.payload.dtos.ProductDTO;
 import com.ecommerce.project.payload.responses.ProductResponse;
 import com.ecommerce.project.repositories.CategoryRepository;
@@ -32,6 +35,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private PageableService pageableService;
 
     @Value("${app.upload.dir:uploads/images}")
     private String uploadDir;
@@ -66,42 +72,42 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse getAllProducts() {
-        List<Product> products = productRepository.findAll();
+    public ProductResponse getAllProducts(PageableDTO pageableDTO) {
+        Pageable pageDetails = pageableService.getPageDetails(pageableDTO);
+        Page<Product> productPage = productRepository.findAll(pageDetails);
+        List<Product> products = productPage.getContent();
         List<ProductDTO> productDTOs = products.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setContent(productDTOs);
 
-        return productResponse;
+        return new ProductResponse().generate(productPage, productDTOs);
     }
 
     @Override
-    public ProductResponse getAllProductsByCategory(Long categoryId) {
+    public ProductResponse getAllProductsByCategory(Long categoryId, PageableDTO pageableDTO) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Category", "categoryId", categoryId));
-        List<Product> products = productRepository.findByCategoryOrderByPriceAsc(category);
+        Pageable pageDetails = pageableService.getPageDetails(pageableDTO);
+        Page<Product> productPage = productRepository.findByCategoryOrderByPriceAsc(category, pageDetails);
+        List<Product> products = productPage.getContent();
         List<ProductDTO> productDTOs = products.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setContent(productDTOs);
 
-        return productResponse;
+        return new ProductResponse().generate(productPage, productDTOs);
     }
 
     @Override
-    public ProductResponse searchProductsByKeyword(String keyword) {
-        List<Product> products = productRepository.findByProductNameLikeIgnoreCase("%" + keyword + "%");
+    public ProductResponse searchProductsByKeyword(String keyword, PageableDTO pageableDTO) {
+        Pageable pageDetails = pageableService.getPageDetails(pageableDTO);
+        Page<Product> productPage = productRepository.findByProductNameLikeIgnoreCase("%" + keyword + "%", pageDetails);
+        List<Product> products = productPage.getContent();
         List<ProductDTO> productDTOs = products.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setContent(productDTOs);
 
-        return productResponse;
+        return new ProductResponse().generate(productPage, productDTOs);
     }
 
     @Override
