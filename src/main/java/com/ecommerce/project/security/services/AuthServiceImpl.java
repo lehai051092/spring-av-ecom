@@ -40,10 +40,10 @@ public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private RoleRepository roleRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserInfoResponse doLogin(LoginDTO loginDTO) {
