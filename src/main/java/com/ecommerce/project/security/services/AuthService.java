@@ -6,11 +6,11 @@ import org.springframework.http.ResponseEntity;
 
 import com.ecommerce.project.security.dtos.LoginDTO;
 import com.ecommerce.project.security.dtos.SignupDTO;
-import com.ecommerce.project.security.response.UserInfoResponse;
+import com.ecommerce.project.security.response.LoginResponse;
 
 public interface AuthService {
 
-    UserInfoResponse doLogin(LoginDTO loginDTO);
+    LoginResponse doLogin(LoginDTO loginDTO);
 
     ResponseEntity<?> registerUser(@Valid SignupDTO signupDTO);
 

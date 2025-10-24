@@ -3,6 +3,7 @@ package com.ecommerce.project.controller;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.project.security.dtos.LoginDTO;
 import com.ecommerce.project.security.dtos.SignupDTO;
+import com.ecommerce.project.security.response.LoginResponse;
 import com.ecommerce.project.security.response.MessageResponse;
-import com.ecommerce.project.security.response.UserInfoResponse;
 import com.ecommerce.project.security.services.AuthService;
 
 @RestController
@@ -24,9 +25,9 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginDTO loginDTO) {
-        UserInfoResponse response = authService.doLogin(loginDTO);
+        LoginResponse response = authService.doLogin(loginDTO);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, response.jwtCookie()).body(response.userInfoResponse());
     }
 
     @PostMapping("/signup")
