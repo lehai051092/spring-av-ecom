@@ -54,4 +54,10 @@ public class AuthController {
 
         return ResponseEntity.ok().body(userInfoResponse);
     }
+
+    @PostMapping("/signout")
+    public ResponseEntity<?> logoutUser() {
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, authService.doLogout().toString())
+                .body(new MessageResponse("You've been signed out!"));
+    }
 }

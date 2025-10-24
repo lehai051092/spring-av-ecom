@@ -70,6 +70,12 @@ public class JwtUtils {
                 .build();
     }
 
+    public ResponseCookie doLogout() {
+        return ResponseCookie.from(jwtCookie, null)
+                .path("/api")
+                .build();
+    }
+
 //    public String generateTokenFromUsername(UserDetails userDetails) {
 //        String username = userDetails.getUsername();
 //        return Jwts.builder()

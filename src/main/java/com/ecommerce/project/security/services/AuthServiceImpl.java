@@ -128,4 +128,9 @@ public class AuthServiceImpl implements AuthService {
 
         return userInfoResponse;
     }
+
+    @Override
+    public ResponseCookie doLogout() {
+        return jwtUtils.doLogout();
+    }
 }

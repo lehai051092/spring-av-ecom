@@ -2,6 +2,7 @@ package com.ecommerce.project.security.services;
 
 import jakarta.validation.Valid;
 
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 
 import com.ecommerce.project.security.dtos.LoginDTO;
@@ -20,4 +21,6 @@ public interface AuthService {
     boolean existsByEmail(String email);
 
     UserInfoResponse getUserProfile(UserDetailsImpl userDetails);
+
+    ResponseCookie doLogout();
 }
