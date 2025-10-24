@@ -5,6 +5,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +16,9 @@ import com.ecommerce.project.security.dtos.LoginDTO;
 import com.ecommerce.project.security.dtos.SignupDTO;
 import com.ecommerce.project.security.response.LoginResponse;
 import com.ecommerce.project.security.response.MessageResponse;
+import com.ecommerce.project.security.response.UserInfoResponse;
 import com.ecommerce.project.security.services.AuthService;
+import com.ecommerce.project.security.services.UserDetailsImpl;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -41,5 +45,13 @@ public class AuthController {
         }
 
         return authService.registerUser(signupDTO);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserProfile(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        UserInfoResponse userInfoResponse = authService.getUserProfile(userDetails);
+
+        return ResponseEntity.ok().body(userInfoResponse);
     }
 }

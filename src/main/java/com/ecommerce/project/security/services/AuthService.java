@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import com.ecommerce.project.security.dtos.LoginDTO;
 import com.ecommerce.project.security.dtos.SignupDTO;
 import com.ecommerce.project.security.response.LoginResponse;
+import com.ecommerce.project.security.response.UserInfoResponse;
 
 public interface AuthService {
 
@@ -17,4 +18,6 @@ public interface AuthService {
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
+
+    UserInfoResponse getUserProfile(UserDetailsImpl userDetails);
 }

@@ -60,13 +60,7 @@ public class AuthServiceImpl implements AuthService {
         // String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
         ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
 
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-
-        UserInfoResponse userInfoResponse = new UserInfoResponse(userDetails.getId(), userDetails.getUsername(), roles);
-
-        return new  LoginResponse(userInfoResponse, jwtCookie.toString());
+        return new  LoginResponse(getUserProfile(userDetails), jwtUtils.generateJwtCookie(userDetails).toString());
     }
 
     @Override
@@ -118,5 +112,20 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public UserInfoResponse getUserProfile(UserDetailsImpl userDetails) {
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+
+        UserInfoResponse userInfoResponse = new UserInfoResponse();
+        userInfoResponse.setId(userDetails.getId());
+        userInfoResponse.setUsername(userDetails.getUsername());
+        userInfoResponse.setEmail(userDetails.getEmail());
+        userInfoResponse.setRoles(roles);
+
+        return userInfoResponse;
     }
 }
